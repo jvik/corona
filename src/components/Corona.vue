@@ -1,6 +1,16 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <div style="padding-right: 3em" align="right" class="my-2">
+      <v-btn @click="init()" color="warning" fab dark>
+        <v-progress-circular
+          v-if="loading"
+          indeterminate
+          color="green"
+        ></v-progress-circular>
+        <v-icon v-if="!loading">mdi-refresh</v-icon>
+      </v-btn>
+    </div>
     <div class="container">
       <apexchart
         type="bar"
@@ -29,6 +39,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       confirmed: 0,
       deaths: 0,
       recovered: 0,
@@ -44,11 +55,17 @@ export default {
   },
   methods: {
     init() {
+      this.loading = true;
       this.$http
         .get(
           "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?f=json&where=Confirmed%20%3E%200&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Confirmed%20desc&resultOffset=0&resultRecordCount=100&cacheHint=true"
         )
         .then(response => {
+          setTimeout(() => {
+            if (response) {
+              this.loading = false;
+            }
+          }, 1000);
           const info = response.data.features[15].attributes;
           this.confirmed = parseInt(info.Confirmed);
           this.deaths = parseInt(info.Deaths);
@@ -65,7 +82,7 @@ export default {
 <style scoped>
 .container {
   margin: auto;
-  max-width: 80%;
+  max-width: 70%;
 }
 
 h3 {
