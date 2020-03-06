@@ -3,7 +3,6 @@
     <h1>{{ msg }}</h1>
     <apexchart
       align="center"
-      width="80%"
       type="bar"
       :options="chartOptions"
       :series="series"
@@ -37,7 +36,7 @@ export default {
           id: "vuechart-example"
         },
         xaxis: {
-          categories: ["sykdom", "dødsfall", "friskmeldt"]
+          categories: ["Sykdom", "Dødsfall", "Friskmeldt"]
         }
       }
     };
