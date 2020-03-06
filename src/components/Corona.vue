@@ -1,12 +1,13 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <apexchart
-      align="center"
-      type="bar"
-      :options="chartOptions"
-      :series="series"
-    ></apexchart>
+    <div class="container">
+      <apexchart
+        type="bar"
+        :options="chartOptions"
+        :series="series"
+      ></apexchart>
+    </div>
   </div>
 </template>
 
@@ -62,6 +63,11 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  margin: auto;
+  max-width: 80%;
+}
+
 h3 {
   margin: 40px 0 0;
 }
