@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <Corona msg="Norsk Coronastatistikk (COVID-19)" />
+    <v-app>
+      <v-content>
+        <Corona msg="Norsk Coronastatistikk (COVID-19)" />
+      </v-content>
+    </v-app>
   </div>
 </template>
 

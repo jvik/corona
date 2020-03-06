@@ -3,12 +3,12 @@
     <h1>{{ msg }}</h1>
     <div align="right" class="my-2">
       <v-row>
-        <v-col style="padding-right:2em;">
-          <v-btn @click="init()" color="warning" fab dark>
+        <v-col class="pr-6">
+          <v-btn @click="init()" color="dark-grey" fab dark>
             <v-progress-circular
               v-if="loading"
               indeterminate
-              color="green"
+              color="white"
             ></v-progress-circular>
             <v-icon v-if="!loading">mdi-refresh</v-icon>
           </v-btn>
