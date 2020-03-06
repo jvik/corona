@@ -22,7 +22,7 @@ export default {
       return [
         {
           name: "smitte",
-          data: [this.confirmed, this.deaths, this.recovered]
+          data: [this.confirmed, this.deaths]
         }
       ];
     }
@@ -37,7 +37,7 @@ export default {
           id: "vuechart-example"
         },
         xaxis: {
-          categories: ["Sykdom", "Dødsfall", "Friskmeldt"]
+          categories: ["Sykdom", "Dødsfall"]
         }
       }
     };
@@ -52,7 +52,7 @@ export default {
           const info = response.data.features[15].attributes;
           this.confirmed = parseInt(info.Confirmed);
           this.deaths = parseInt(info.Deaths);
-          this.recovered = parseInt(info.Recovered);
+          // this.recovered = parseInt(info.Recovered); // Not reported for Norway
         });
     }
   },
