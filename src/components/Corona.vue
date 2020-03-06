@@ -1,22 +1,28 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <div style="padding-right: 3em" align="right" class="my-2">
-      <v-btn @click="init()" color="warning" fab dark>
-        <v-progress-circular
-          v-if="loading"
-          indeterminate
-          color="green"
-        ></v-progress-circular>
-        <v-icon v-if="!loading">mdi-refresh</v-icon>
-      </v-btn>
-    </div>
-    <div class="container">
-      <apexchart
-        type="bar"
-        :options="chartOptions"
-        :series="series"
-      ></apexchart>
+    <div align="right" class="my-2">
+      <v-row>
+        <v-col style="padding-right:2em;">
+          <v-btn @click="init()" color="warning" fab dark>
+            <v-progress-circular
+              v-if="loading"
+              indeterminate
+              color="green"
+            ></v-progress-circular>
+            <v-icon v-if="!loading">mdi-refresh</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
+        <div class="container">
+          <apexchart
+            type="bar"
+            :options="chartOptions"
+            :series="series"
+          ></apexchart>
+        </div>
+      </v-row>
     </div>
   </div>
 </template>
@@ -82,7 +88,6 @@ export default {
 <style scoped>
 .container {
   margin: auto;
-  max-width: 70%;
 }
 
 h3 {
