@@ -37,7 +37,7 @@ export default {
           id: "vuechart-example"
         },
         xaxis: {
-          categories: ["Sykdom", "Dødsfall"]
+          categories: ["Bekreftet smittet", "Dødsfall"]
         }
       }
     };
