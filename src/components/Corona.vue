@@ -108,8 +108,6 @@ export default {
             }
           }, 1000);
 
-          console.log(response);
-
           const data = {
             name: api.name,
             data: [
@@ -119,8 +117,6 @@ export default {
           };
 
           this.responseData.series.push(data);
-
-          // this.responseData.stats.push(response.api.path);
         });
       }
     }
