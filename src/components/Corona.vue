@@ -5,16 +5,18 @@
       <v-row class="px-10">
         <v-col class="d-flex" cols="12" sm="6">
           <v-select
-            :items="API"
+            :items="apiList"
             label="Velg datakilde"
-            item-text="name"
+            item-text="label"
             return-object
-            v-model="selectedAPI"
-            @change="init(selectedAPI)"
+            multiple
+            chips
+            v-model="selectedAPIs"
+            @change="init(selectedAPIs)"
           ></v-select>
         </v-col>
         <v-col align="right">
-          <v-btn @click="init(selectedAPI)" color="dark-grey" fab dark>
+          <v-btn @click="init(selectedAPIs)" color="dark-grey" fab dark>
             <v-progress-circular
               v-if="loading"
               indeterminate
@@ -38,6 +40,7 @@
 </template>
 
 <script>
+import _ from "lodash";
 export default {
   name: "Corona",
   props: {
@@ -45,12 +48,7 @@ export default {
   },
   computed: {
     series: function() {
-      return [
-        {
-          name: "smitte",
-          data: [this.confirmed, this.deaths]
-        }
-      ];
+      return this.responseData.series;
     }
   },
   data() {
@@ -59,20 +57,32 @@ export default {
       confirmed: 0,
       deaths: 0,
       recovered: 0,
-      API: [
+      apiList: [
         {
-          name: "arcgis.com",
+          name: "arcgis",
+          label: "arcgis.com",
           url:
-            "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?f=json&where=Confirmed%20%3E%200&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Confirmed%20desc&resultOffset=0&resultRecordCount=100&cacheHint=true"
+            "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?f=json&where=Confirmed%20%3E%200&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Confirmed%20desc&resultOffset=0&resultRecordCount=100&cacheHint=true",
+          path: "data.features[15].attributes.",
+          confirmed: "Confirmed",
+          deaths: "Deaths"
         },
         {
-          name: "lab.isaaclin.cn",
-          url: "https://lab.isaaclin.cn/nCoV/api/area?latest=1&province=挪威"
+          name: "isaaclin",
+          label: "lab.isaaclin.cn",
+          url: "https://lab.isaaclin.cn/nCoV/api/area?latest=1&province=挪威",
+          path: "data.results[0]",
+          confirmed: "confirmedCount",
+          deaths: "deadCount"
         }
       ],
-      selectedAPI: {},
+      responseData: {
+        series: []
+      },
+      selectedAPIs: [],
       chartOptions: {
         chart: {
+          height: "200px",
           id: "vuechart-example"
         },
         xaxis: {
@@ -82,33 +92,42 @@ export default {
     };
   },
   methods: {
-    init(api) {
+    init(selectedAPIs) {
+      this.responseData.series = [];
       this.loading = true;
 
-      this.$http.get(api.url).then(response => {
-        setTimeout(() => {
-          if (response) {
-            this.loading = false;
-          }
-        }, 1000);
+      for (const api of selectedAPIs) {
+        this.responseData.series = this.responseData.series.filter(object => {
+          object.name === api.name;
+        });
 
-        if (api.name === "lab.isaaclin.cn") {
-          const info = response.data.results[0];
-          this.confirmed = parseInt(info.confirmedCount);
-          this.deaths = parseInt(info.deathCount);
-        }
-        if (api.name === "arcgis.com") {
-          const info = response.data.features[15].attributes;
-          this.confirmed = parseInt(info.Confirmed);
-          this.deaths = parseInt(info.Deaths);
-        }
-        // this.recovered = parseInt(info.Recovered); // Not reported for Norway
-      });
+        this.$http.get(api.url).then(response => {
+          setTimeout(() => {
+            if (response) {
+              this.loading = false;
+            }
+          }, 1000);
+
+          console.log(response);
+
+          const data = {
+            name: api.name,
+            data: [
+              parseInt(_.get(response, api.path + api.confirmed)),
+              parseInt(_.get(response, api.path + api.deaths))
+            ]
+          };
+
+          this.responseData.series.push(data);
+
+          // this.responseData.stats.push(response.api.path);
+        });
+      }
     }
   },
   mounted() {
-    this.selectedAPI = this.API[0];
-    this.init(this.selectedAPI);
+    this.selectedAPIs = this.apiList;
+    this.init(this.selectedAPIs);
   }
 };
 </script>
