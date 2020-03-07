@@ -1,6 +1,9 @@
 <template>
   <div class="hello">
     <h1 class="mt-4">{{ msg }}</h1>
+    <v-overlay v-model="autoLoading">
+      <v-progress-circular indeterminate size="100"></v-progress-circular>
+    </v-overlay>
     <div class="my-2">
       <v-row class="px-10">
         <v-col class="d-flex" cols="8">
@@ -14,6 +17,14 @@
             v-model="selectedAPIs"
             @change="init(selectedAPIs)"
           ></v-select>
+        </v-col>
+        <v-col>
+          <v-switch
+            hint="Hvert femte minutt"
+            persistent-hint
+            v-model="autoReloadingEnabled"
+            label="Auto oppdater"
+          ></v-switch>
         </v-col>
         <v-col align="right">
           <v-btn @click="init(selectedAPIs)" color="dark-grey" fab dark>
@@ -54,6 +65,8 @@ export default {
   data() {
     return {
       loading: false,
+      autoLoading: false,
+      autoReloadingEnabled: true,
       confirmed: 0,
       deaths: 0,
       recovered: 0,
@@ -91,33 +104,63 @@ export default {
       }
     };
   },
+  created() {
+    const delay = 300000;
+    if (this.autoReloadingEnabled) {
+      setInterval(
+        function() {
+          this.request(this.selectedAPIs);
+          this.autoLoading = true;
+        }.bind(this),
+        delay
+      );
+    }
+  },
   methods: {
     init(selectedAPIs) {
-      this.responseData.series = [];
       this.loading = true;
+      this.request(selectedAPIs);
+    },
+    request(selectedAPIs) {
+      for (const selectedAPI of selectedAPIs) {
+        if (this.selectedAPIs.length !== this.responseData.series.length) {
+          this.responseData.series = this.responseData.series.filter(object => {
+            object.name === selectedAPI.name;
+          });
+        }
+        this.$http
+          .get(selectedAPI.url)
+          .then(response => {
+            if (response && response.status === 200) {
+              setTimeout(() => {
+                this.loading = false;
+                this.autoLoading = false;
+              }, 1000);
 
-      for (const api of selectedAPIs) {
-        this.responseData.series = this.responseData.series.filter(object => {
-          object.name === api.name;
-        });
+              const data = {
+                name: selectedAPI.name,
+                data: [
+                  parseInt(
+                    _.get(response, selectedAPI.path + selectedAPI.confirmed)
+                  ),
+                  parseInt(
+                    _.get(response, selectedAPI.path + selectedAPI.deaths)
+                  )
+                ]
+              };
 
-        this.$http.get(api.url).then(response => {
-          setTimeout(() => {
-            if (response) {
-              this.loading = false;
+              let dataAlreadyAvailable = this.responseData.series.find(
+                object => object.name === selectedAPI.name
+              );
+
+              if (dataAlreadyAvailable) {
+                dataAlreadyAvailable = data;
+              } else {
+                this.responseData.series.push(data);
+              }
             }
-          }, 1000);
-
-          const data = {
-            name: api.name,
-            data: [
-              parseInt(_.get(response, api.path + api.confirmed)),
-              parseInt(_.get(response, api.path + api.deaths))
-            ]
-          };
-
-          this.responseData.series.push(data);
-        });
+          })
+          .catch();
       }
     }
   },
