@@ -1,10 +1,20 @@
 <template>
   <div class="hello">
     <h1 class="mt-4">{{ msg }}</h1>
-    <div align="right" class="my-2">
-      <v-row>
-        <v-col class="pr-6">
-          <v-btn @click="init()" color="dark-grey" fab dark>
+    <div class="my-2">
+      <v-row class="px-10">
+        <v-col class="d-flex" cols="12" sm="6">
+          <v-select
+            :items="API"
+            label="Velg datakilde"
+            item-text="name"
+            return-object
+            v-model="selectedAPI"
+            @change="init(selectedAPI)"
+          ></v-select>
+        </v-col>
+        <v-col align="right">
+          <v-btn @click="init(selectedAPI)" color="dark-grey" fab dark>
             <v-progress-circular
               v-if="loading"
               indeterminate
@@ -14,14 +24,14 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row>
-        <div class="container">
+      <v-row class="px-10">
+        <v-col>
           <apexchart
             type="bar"
             :options="chartOptions"
             :series="series"
           ></apexchart>
-        </div>
+        </v-col>
       </v-row>
     </div>
   </div>
@@ -49,6 +59,18 @@ export default {
       confirmed: 0,
       deaths: 0,
       recovered: 0,
+      API: [
+        {
+          name: "arcgis.com",
+          url:
+            "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?f=json&where=Confirmed%20%3E%200&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Confirmed%20desc&resultOffset=0&resultRecordCount=100&cacheHint=true"
+        },
+        {
+          name: "lab.isaaclin.cn",
+          url: "https://lab.isaaclin.cn/nCoV/api/area?latest=1&province=挪威"
+        }
+      ],
+      selectedAPI: {},
       chartOptions: {
         chart: {
           id: "vuechart-example"
@@ -60,27 +82,33 @@ export default {
     };
   },
   methods: {
-    init() {
+    init(api) {
       this.loading = true;
-      this.$http
-        .get(
-          "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?f=json&where=Confirmed%20%3E%200&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Confirmed%20desc&resultOffset=0&resultRecordCount=100&cacheHint=true"
-        )
-        .then(response => {
-          setTimeout(() => {
-            if (response) {
-              this.loading = false;
-            }
-          }, 1000);
+
+      this.$http.get(api.url).then(response => {
+        setTimeout(() => {
+          if (response) {
+            this.loading = false;
+          }
+        }, 1000);
+
+        if (api.name === "lab.isaaclin.cn") {
+          const info = response.data.results[0];
+          this.confirmed = parseInt(info.confirmedCount);
+          this.deaths = parseInt(info.deathCount);
+        }
+        if (api.name === "arcgis.com") {
           const info = response.data.features[15].attributes;
           this.confirmed = parseInt(info.Confirmed);
           this.deaths = parseInt(info.Deaths);
-          // this.recovered = parseInt(info.Recovered); // Not reported for Norway
-        });
+        }
+        // this.recovered = parseInt(info.Recovered); // Not reported for Norway
+      });
     }
   },
   mounted() {
-    this.init();
+    this.selectedAPI = this.API[0];
+    this.init(this.selectedAPI);
   }
 };
 </script>
