@@ -3,7 +3,7 @@
     <h1 class="mt-4">{{ msg }}</h1>
     <div class="my-2">
       <v-row class="px-10">
-        <v-col class="d-flex" cols="12" sm="6">
+        <v-col class="d-flex" cols="8">
           <v-select
             :items="apiList"
             label="Velg datakilde"

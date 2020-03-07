@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <v-container fluid>
-      <Corona msg="Norsk Coronastatistikk (COVID-19)" />
-    </v-container>
+    <Corona msg="Norsk Coronastatistikk (COVID-19)" />
   </v-app>
 </template>
 
