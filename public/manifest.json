@@ -1,6 +1,6 @@
 {
-  "name": "pwa",
-  "short_name": "pwa",
+  "name": "Norsk Coronastatistikk",
+  "short_name": "Corona",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",
