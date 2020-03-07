@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1 class="mt-4">{{ msg }}</h1>
     <div align="right" class="my-2">
       <v-row>
         <v-col class="pr-6">

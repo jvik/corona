@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app>
+    <v-app style="background-color: white;">
       <v-content>
         <Corona msg="Norsk Coronastatistikk (COVID-19)" />
       </v-content>
@@ -26,6 +26,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 20px;
 }
 </style>
