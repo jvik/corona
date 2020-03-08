@@ -50,6 +50,12 @@
           ></apexchart>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col>
+          <p>Latest update</p>
+          <p>{{ latestUpdate }}</p>
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
@@ -74,6 +80,7 @@ export default {
       confirmed: 0,
       deaths: 0,
       recovered: 0,
+      latestUpdate: null,
       apiList: [
         {
           name: "arcgis",
@@ -143,6 +150,8 @@ export default {
               setTimeout(() => {
                 this.loading = false;
                 this.autoLoading = false;
+                var newDate = new Date(Date.now());
+                this.latestUpdate = newDate.toLocaleTimeString();
               }, 1000);
 
               const data = {
