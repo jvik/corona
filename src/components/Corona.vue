@@ -6,7 +6,7 @@
     </v-overlay>
     <div class="my-2">
       <v-row class="px-10">
-        <v-col class="d-flex" cols="8">
+        <v-col cols="12" class="d-flex">
           <v-select
             :items="apiList"
             label="Velg datakilde"
@@ -18,15 +18,16 @@
             @change="init(selectedAPIs)"
           ></v-select>
         </v-col>
-        <v-col>
+        <v-col class="mt-0 pt-0" md="6">
           <v-switch
+            class="mt-0 pt-0"
             hint="Hvert femte minutt"
             persistent-hint
             v-model="autoReloadingEnabled"
             label="Auto oppdater"
           ></v-switch>
         </v-col>
-        <v-col align="right">
+        <v-col class="mt-0 pt-0" align="right">
           <v-btn @click="init(selectedAPIs)" color="dark-grey" fab dark>
             <v-progress-circular
               v-if="loading"
