@@ -143,9 +143,6 @@ export default {
         this.$http
           .get(selectedAPI.url)
           .then(response => {
-            if (response && response.status === 503) {
-              console.log("rip");
-            }
             if (response && response.status === 200) {
               setTimeout(() => {
                 this.loading = false;
