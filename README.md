@@ -1,4 +1,9 @@
-# corona
+# Norsk Coronastatistikk (COVID-19)
+Project contains a PWA with a dashboard for monitoring spread of virus COVID-19 in Norway.
+
+The solution is built to dynamically take in multiple APIs of your own preference.
+
+Built to test out Vue PWA and Vuetifyx
 
 ## Project setup
 ```
