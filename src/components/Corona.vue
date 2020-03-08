@@ -15,7 +15,7 @@
             multiple
             chips
             v-model="selectedAPIs"
-            @change="init(selectedAPIs)"
+            @change="init()"
           ></v-select>
         </v-col>
         <v-col class="mt-0 pt-0" md="6">
@@ -28,7 +28,7 @@
           ></v-switch>
         </v-col>
         <v-col class="mt-0 pt-0" align="right">
-          <v-btn @click="init(selectedAPIs)" color="dark-grey" fab dark>
+          <v-btn @click="init()" color="dark-grey" fab dark>
             <v-progress-circular
               v-if="loading"
               indeterminate
@@ -118,12 +118,13 @@ export default {
     }
   },
   methods: {
-    init(selectedAPIs) {
+    init() {
       this.loading = true;
-      this.request(selectedAPIs);
+      this.request();
     },
-    request(selectedAPIs) {
-      for (const selectedAPI of selectedAPIs) {
+    request() {
+      // Remove stats that are not selected
+      for (const selectedAPI of this.selectedAPIs) {
         if (this.selectedAPIs.length !== this.responseData.series.length) {
           this.responseData.series = this.responseData.series.filter(object => {
             object.name === selectedAPI.name;
@@ -132,6 +133,9 @@ export default {
         this.$http
           .get(selectedAPI.url)
           .then(response => {
+            if (response && response.status === 503) {
+              console.log("rip");
+            }
             if (response && response.status === 200) {
               setTimeout(() => {
                 this.loading = false;
@@ -154,6 +158,7 @@ export default {
                 object => object.name === selectedAPI.name
               );
 
+              // If data is already fetched, overwrite instead of pushing to data array
               if (dataAlreadyAvailable) {
                 dataAlreadyAvailable = data;
               } else {
@@ -161,13 +166,15 @@ export default {
               }
             }
           })
-          .catch();
+          .catch(() => {
+            this.request();
+          });
       }
     }
   },
   mounted() {
     this.selectedAPIs = this.apiList;
-    this.init(this.selectedAPIs);
+    this.init();
   }
 };
 </script>
@@ -175,20 +182,5 @@ export default {
 <style scoped>
 .container {
   margin: auto;
-}
-
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
 }
 </style>
