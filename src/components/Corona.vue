@@ -5,8 +5,8 @@
       <v-progress-circular indeterminate size="100"></v-progress-circular>
     </v-overlay>
     <div class="my-2">
-      <v-row class="px-10">
-        <v-col cols="12" class="d-flex">
+      <v-row justify="space-between" class="px-10">
+        <v-col cols="auto" xs="12" md="8">
           <v-select
             :items="apiList"
             label="Velg datakilde"
@@ -18,7 +18,7 @@
             @change="init()"
           ></v-select>
         </v-col>
-        <v-col class="mt-0 pt-0" md="6">
+        <v-col cols="auto" sm="6" md="2" class="mt-0 pt-0">
           <v-switch
             class="mt-0 pt-0"
             hint="Hvert femte minutt"
@@ -27,13 +27,15 @@
             label="Auto oppdater"
           ></v-switch>
         </v-col>
-        <v-col class="mt-0 pt-0" align="right">
-          <v-btn @click="init()" color="dark-grey" fab dark>
-            <v-progress-circular
-              v-if="loading"
-              indeterminate
-              color="white"
-            ></v-progress-circular>
+        <v-col cols="auto" sm="1" md="2" class="mt-0 pt-0" align="right">
+          <v-btn
+            small
+            :loading="loading"
+            @click="init()"
+            color="dark-grey"
+            fab
+            dark
+          >
             <v-icon v-if="!loading">mdi-refresh</v-icon>
           </v-btn>
         </v-col>
@@ -44,6 +46,7 @@
             type="bar"
             :options="chartOptions"
             :series="series"
+            max-width="95%"
           ></apexchart>
         </v-col>
       </v-row>
