@@ -152,7 +152,6 @@ export default {
           .get(selectedAPI.url)
           .then(response => {
             if (response && response.status === 200) {
-              console.log(response);
               setTimeout(() => {
                 this.loading = false;
                 this.autoLoading = false;
@@ -168,13 +167,11 @@ export default {
                 response,
                 selectedAPI.path + selectedAPI.deaths
               );
-              console.log("request -> confirmedBuilder", confirmedBuilder);
 
               const data = {
                 name: selectedAPI.name,
                 data: [confirmedBuilder, deathsBuilder]
               };
-              console.log("request -> data", data);
 
               let dataAlreadyAvailable = this.responseData.series.find(
                 object => object.name === selectedAPI.name
