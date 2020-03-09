@@ -91,15 +91,15 @@ export default {
           confirmed: "confirmed",
           deaths: "dead"
         },
-        // {
-        //   name: "arcgis",
-        //   label: "arcgis.com",
-        //   url:
-        //     "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?f=json&where=Confirmed%20%3E%200&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Confirmed%20desc&resultOffset=0&resultRecordCount=100&cacheHint=true",
-        //   path: "data.features[15].attributes.",
-        //   confirmed: "Confirmed",
-        //   deaths: "Deaths"
-        // },
+        {
+          name: "arcgis",
+          label: "arcgis.com",
+          url:
+            "https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/2/query?f=json&where=Confirmed%20%3E%200&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&orderByFields=Confirmed%20desc&resultOffset=0&resultRecordCount=100&cacheHint=true",
+          path: "data.features[15].attributes.",
+          confirmed: "Confirmed",
+          deaths: "Deaths"
+        },
         {
           name: "isaaclin",
           label: "lab.isaaclin.cn",
