@@ -83,6 +83,14 @@ export default {
       latestUpdate: null,
       apiList: [
         {
+          name: "vg",
+          label: "vg.no",
+          url: "https://www.vg.no/spesial/2020/corona-viruset/data/norway/",
+          path: "data.totals",
+          confirmed: "confirmed",
+          deaths: "dead"
+        },
+        {
           name: "arcgis",
           label: "arcgis.com",
           url:
