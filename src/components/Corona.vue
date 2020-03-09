@@ -86,7 +86,7 @@ export default {
           name: "vg",
           label: "vg.no",
           url: "https://www.vg.no/spesial/2020/corona-viruset/data/norway/",
-          path: "data.totals",
+          path: "data.totals.",
           confirmed: "confirmed",
           deaths: "dead"
         },
@@ -152,6 +152,7 @@ export default {
           .get(selectedAPI.url)
           .then(response => {
             if (response && response.status === 200) {
+              console.log(response);
               setTimeout(() => {
                 this.loading = false;
                 this.autoLoading = false;
@@ -159,17 +160,21 @@ export default {
                 this.latestUpdate = newDate.toLocaleTimeString();
               }, 1000);
 
+              const confirmedBuilder = _.get(
+                response,
+                selectedAPI.path + selectedAPI.confirmed
+              );
+              const deathsBuilder = _.get(
+                response,
+                selectedAPI.path + selectedAPI.deaths
+              );
+              console.log("request -> confirmedBuilder", confirmedBuilder);
+
               const data = {
                 name: selectedAPI.name,
-                data: [
-                  parseInt(
-                    _.get(response, selectedAPI.path + selectedAPI.confirmed)
-                  ),
-                  parseInt(
-                    _.get(response, selectedAPI.path + selectedAPI.deaths)
-                  )
-                ]
+                data: [confirmedBuilder, deathsBuilder]
               };
+              console.log("request -> data", data);
 
               let dataAlreadyAvailable = this.responseData.series.find(
                 object => object.name === selectedAPI.name
