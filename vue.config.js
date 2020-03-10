@@ -1,6 +1,6 @@
 module.exports = {
-	transpileDependencies: ["vuetify"],
-	pwa: {    
-    appleMobileWebAppCapable: 'yes'  
+  transpileDependencies: ["vuetify"],
+  pwa: {
+    appleMobileWebAppCapable: "yes"
   }
 };
