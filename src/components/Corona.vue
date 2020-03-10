@@ -41,8 +41,8 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row class="px-10">
-        <v-col>
+      <v-row justify="center" class="px-10">
+        <v-col cols="auto" sm="12" md="8">
           <apexchart
             type="bar"
             :options="chartOptions"
