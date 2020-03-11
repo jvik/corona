@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
           'For more details, visit https://goo.gl/AFskqB'
       )
     },
-    registered() {
+    registered(registration) {
       console.log('Service worker has been registered.')
 
       // Routinely check for app updates by testing for a new service worker.
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
     updatefound() {
       console.log('New content is downloading.')
     },
-    updated() {
+    updated(registration) {
       console.log('New content is available; please refresh.')
       document.dispatchEvent(
         new CustomEvent('swUpdated', { detail: registration })
