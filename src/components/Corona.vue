@@ -76,7 +76,14 @@ export default {
   },
   computed: {
     series: function() {
-      return this.responseData.series
+      function sortNumber(a, b) {
+        return b.data[0] - a.data[0]
+      }
+
+      const unsorted = this.responseData.series
+      const sorted = unsorted.sort(sortNumber)
+
+      return sorted
     },
   },
   data() {
