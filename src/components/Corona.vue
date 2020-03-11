@@ -25,7 +25,7 @@
             hint="Every 5 minutes"
             persistent-hint
             v-model="autoReloadingEnabled"
-            label="Auto update"
+            label="Auto updated"
           ></v-switch>
         </v-col>
         <v-col cols="auto" sm="1" md="2" class="mt-0 pt-0" align="right">
