@@ -53,7 +53,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <p>Last update {{ latestUpdate }}</p>
+          <p>Last updated {{ latestUpdate }}</p>
           <a href="https://jvik.no">Made by jvik</a>
         </v-col>
       </v-row>
