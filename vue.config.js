@@ -1,6 +1,11 @@
 module.exports = {
-  transpileDependencies: ["vuetify"],
+  transpileDependencies: ['vuetify'],
   pwa: {
-    appleMobileWebAppCapable: "yes"
-  }
-};
+    appleMobileWebAppCapable: 'yes',
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: './src/sw.js',
+      swDest: 'service-worker.js',
+    },
+  },
+}
