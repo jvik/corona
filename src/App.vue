@@ -2,7 +2,7 @@
   <v-app>
     <Corona msg="Norwegian Coronavirus Statistics (COVID-19)" />
     <v-btn v-if="updateExists" @click="refreshApp">
-      New version available! Click to update
+      New version available! Click here to update
     </v-btn>
   </v-app>
 </template>
@@ -49,7 +49,7 @@ export default {
       if (!this.registration || !this.registration.waiting) {
         return
       }
-      this.registration.waiting.postMessage('skipWaiting')
+      this.registration.waiting.postMessage({ type: 'SKIP_WAITING' })
     },
   },
 }
