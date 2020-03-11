@@ -10,7 +10,7 @@
           <v-select
             :disable="loading"
             :items="apiList"
-            label="Velg datakilde"
+            label="Select data source"
             item-text="label"
             return-object
             multiple
@@ -22,10 +22,10 @@
         <v-col cols="auto" sm="6" md="2" class="mt-0 pt-0">
           <v-switch
             class="mt-0 pt-0"
-            hint="Hvert femte minutt"
+            hint="Every 5 minutes"
             persistent-hint
             v-model="autoReloadingEnabled"
-            label="Auto oppdater"
+            label="Auto update"
           ></v-switch>
         </v-col>
         <v-col cols="auto" sm="1" md="2" class="mt-0 pt-0" align="right">
@@ -53,8 +53,8 @@
       </v-row>
       <v-row>
         <v-col>
-          <p>Latest update</p>
-          <p>{{ latestUpdate }}</p>
+          <p>Last update {{ latestUpdate }}</p>
+          <a href="https://jvik.no">Made by Jørgen Vik</a>
         </v-col>
       </v-row>
     </div>
