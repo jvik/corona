@@ -132,7 +132,7 @@ export default {
           id: 'vuechart-example',
         },
         xaxis: {
-          categories: ['Bekreftet smittet', 'Dødsfall'],
+          categories: ['Confirmed infected', 'Death count'],
         },
       },
     }
