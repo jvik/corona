@@ -1,6 +1,6 @@
 {
-  "name": "Norsk Coronastatistikk",
-  "short_name": "Corona",
+  "name": "Norwegian Coronavirus Statistics",
+  "short_name": "COVID19STATS",
   "icons": [
     {
       "src": "/img/icons/android-chrome-192x192.png",
