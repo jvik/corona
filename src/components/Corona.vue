@@ -55,6 +55,7 @@
         <v-col>
           <p>Last updated {{ latestUpdate }}</p>
           <a href="https://jvik.no">Made by jvik</a>
+          | <a href="https://github.com/jvik/corona">github repo</a>
         </v-col>
       </v-row>
     </div>
