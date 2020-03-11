@@ -54,7 +54,7 @@
       <v-row>
         <v-col>
           <p>Last update {{ latestUpdate }}</p>
-          <a href="https://jvik.no">Made by Jørgen Vik</a>
+          <a href="https://jvik.no">Made by jvik</a>
         </v-col>
       </v-row>
     </div>
