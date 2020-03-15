@@ -45,6 +45,10 @@ export default {
         xaxis: {
           type: 'datetime',
           categories: this.timeSeriesDates,
+          title: {
+            offsetY: 10,
+            text: 'Infected over time',
+          },
         },
       }
       return options

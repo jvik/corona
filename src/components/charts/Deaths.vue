@@ -13,10 +13,10 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 export default {
-  props: ['series'],
   components: {
     VueApexCharts,
   },
+  props: ['series'],
   data() {
     return {
       chartOptions: {
@@ -25,12 +25,21 @@ export default {
           id: 'confirmed',
         },
         xaxis: {
-          categories: ['Confirmed infected'],
+          categories: ['Death count'],
           labels: {
             show: false,
           },
           title: {
-            text: 'Confirmed infected',
+            text: 'Confirmed deaths',
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              color: undefined,
+              fontSize: '12px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 600,
+              cssClass: 'apexcharts-xaxis-title',
+            },
           },
         },
       },

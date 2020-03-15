@@ -6,19 +6,6 @@
     </v-overlay>
     <div class="my-2">
       <v-row justify="space-between" class="px-10">
-        <v-col cols="auto" xs="12" md="8">
-          <!-- <v-select
-            :disable="loading"
-            :items="apiList"
-            label="Select data source"
-            item-text="label"
-            return-object
-            multiple
-            chips
-            v-model="selectedAPIs"
-            @change="init()"
-          ></v-select> -->
-        </v-col>
         <v-col cols="auto" sm="6" md="2" class="mt-0 pt-0">
           <v-switch
             class="mt-0 pt-0"
@@ -41,20 +28,12 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row class="px-10">
-        <v-col>
+      <v-row justify="space-between" class="px-10">
+        <v-col cols="auto" sm="6" md="4">
           <Confirmed :series="confirmedSeries" />
         </v-col>
-        <v-col>
-          <v-card>
-            <VueApexCharts
-              type="bar"
-              :options="chartOptions2"
-              :series="deathSeries"
-            ></VueApexCharts>
-          </v-card>
-        </v-col>
-        <v-col>
+        <v-col cols="auto" sm="6" md="4"><Deaths :series="deathSeries"/></v-col>
+        <v-col cols="auto" sm="6" md="4">
           <TimeSeries :timeseries="timeseries" />
         </v-col>
       </v-row>
@@ -82,16 +61,16 @@
 <script>
 import _ from 'lodash'
 import axios from 'axios'
-import VueApexCharts from 'vue-apexcharts'
 import TimeSeries from './charts/TimeSeries'
 import Confirmed from './charts/Confirmed'
+import Deaths from './charts/Deaths'
 
 export default {
   name: 'Corona',
   components: {
-    VueApexCharts,
     TimeSeries,
     Confirmed,
+    Deaths,
   },
   props: {
     msg: String,
@@ -136,14 +115,6 @@ export default {
           confirmed: 'confirmed',
           deaths: 'dead',
         },
-        // {
-        //   name: 'isaaclin',
-        //   label: 'lab.isaaclin.cn',
-        //   url: 'https://lab.isaaclin.cn/nCoV/api/area?latest=1&province=挪威',
-        //   path: 'data.results[0]',
-        //   confirmed: 'confirmedCount',
-        //   deaths: 'deadCount',
-        // },
       ],
       responseData: {
         confirmedSeries: [],
@@ -151,16 +122,6 @@ export default {
       },
       selectedAPIs: [],
       timeseries: {},
-
-      chartOptions2: {
-        chart: {
-          height: '200px',
-          id: 'confirmed',
-        },
-        xaxis: {
-          categories: ['Death count'],
-        },
-      },
     }
   },
   created() {
