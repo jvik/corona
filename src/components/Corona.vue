@@ -29,11 +29,11 @@
         </v-col>
       </v-row>
       <v-row justify="space-between" class="px-10">
-        <v-col cols="auto" sm="6" md="4">
+        <v-col cols="auto" sm="6" md="6">
           <Confirmed :series="confirmedSeries" />
         </v-col>
         <!-- <v-col cols="auto" sm="6" md="4"><Deaths :series="deathSeries"/></v-col> -->
-        <v-col cols="auto" sm="6" md="4">
+        <v-col cols="auto" sm="6" md="6">
           <TimeSeries :timeseries="responseData.timeseries.total.confirmed" />
         </v-col>
       </v-row>
