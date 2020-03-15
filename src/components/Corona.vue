@@ -32,7 +32,7 @@
         <v-col cols="auto" sm="6" md="4">
           <Confirmed :series="confirmedSeries" />
         </v-col>
-        <v-col cols="auto" sm="6" md="4"><Deaths :series="deathSeries"/></v-col>
+        <!-- <v-col cols="auto" sm="6" md="4"><Deaths :series="deathSeries"/></v-col> -->
         <v-col cols="auto" sm="6" md="4">
           <TimeSeries :timeseries="responseData.timeseries.total.confirmed" />
         </v-col>
@@ -62,14 +62,14 @@
 import axios from 'axios'
 import TimeSeries from './charts/TimeSeries'
 import Confirmed from './charts/Confirmed'
-import Deaths from './charts/Deaths'
+// import Deaths from './charts/Deaths'
 
 export default {
   name: 'Corona',
   components: {
     TimeSeries,
     Confirmed,
-    Deaths,
+    // Deaths,
   },
   props: {
     msg: String,
@@ -129,6 +129,13 @@ export default {
       this.request()
     },
     request() {
+      // axios
+      //   .get(
+      //     'url: "https://lab.isaaclin.cn/nCoV/api/area?latest=1&province=挪威"'
+      //   )
+      //   .then(response => {
+      //     console.log(response)
+      //   })
       // Remove stats that are not selected
       axios
         .get(
