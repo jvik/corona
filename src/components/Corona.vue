@@ -34,7 +34,7 @@
         </v-col>
         <v-col cols="auto" sm="6" md="4"><Deaths :series="deathSeries"/></v-col>
         <v-col cols="auto" sm="6" md="4">
-          <TimeSeries :timeseries="timeseries" />
+          <TimeSeries :timeseries="responseData.timeseries.total.confirmed" />
         </v-col>
       </v-row>
       <v-row>
@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import axios from 'axios'
 import TimeSeries from './charts/TimeSeries'
 import Confirmed from './charts/Confirmed'
@@ -76,25 +75,17 @@ export default {
     msg: String,
   },
   computed: {
-    deathSeries: function() {
-      function sortNumber(a, b) {
-        return b.data[0] - a.data[0]
-      }
+    deathSeries() {
+      const myArray = [{ data: [this.deaths], name: 'vg' }]
 
-      const unsorted = this.responseData.deathSeries
-      const sorted = unsorted.sort(sortNumber)
-
-      return sorted
+      return myArray
     },
-    confirmedSeries: function() {
-      function sortNumber(a, b) {
-        return b.data[0] - a.data[0]
-      }
+    confirmedSeries() {
+      const myArray = [
+        { data: [this.responseData.totals.confirmed], name: 'vg' },
+      ]
 
-      const unsorted = this.responseData.confirmedSeries
-      const sorted = unsorted.sort(sortNumber)
-
-      return sorted
+      return myArray
     },
   },
   data() {
@@ -106,19 +97,15 @@ export default {
       deaths: 0,
       recovered: 0,
       latestUpdate: null,
-      apiList: [
-        {
-          name: 'vg',
-          label: 'vg.no',
-          url: 'https://www.vg.no/spesial/2020/corona-viruset/data/norway/',
-          path: 'data.totals.',
-          confirmed: 'confirmed',
-          deaths: 'dead',
-        },
-      ],
       responseData: {
-        confirmedSeries: [],
-        deathSeries: [],
+        timeseries: {
+          total: {
+            confirmed: {},
+          },
+        },
+        totals: {
+          confirmed: 0,
+        },
       },
       selectedAPIs: [],
       timeseries: {},
@@ -143,74 +130,33 @@ export default {
     },
     request() {
       // Remove stats that are not selected
-      for (const selectedAPI of this.selectedAPIs) {
-        if (
-          this.selectedAPIs.length !== this.responseData.confirmedSeries.length
-        ) {
-          this.responseData.confirmedSeries = this.responseData.confirmedSeries.filter(
-            object => {
-              object.name === selectedAPI.name
-            }
-          )
-          this.responseData.deathSeries = this.responseData.deathSeries.filter(
-            object => {
-              object.name === selectedAPI.name
-            }
-          )
-        }
-        axios
-          .get(selectedAPI.url)
-          .then(response => {
-            if (response && response.status === 200) {
-              setTimeout(() => {
-                this.loading = false
-                this.autoLoading = false
-                var newDate = new Date(Date.now())
-                this.latestUpdate = newDate.toLocaleTimeString()
-              }, 1000)
+      axios
+        .get(
+          'https://redutv-api.vg.no/corona/v1/sheets/norway-table-overview/?region=county'
+        )
+        .then(response => {
+          if (response && response.status === 200) {
+            this.deaths = response.data.totals.dead
+          }
+        })
 
-              this.timeseries = response.data.timeseries.total.confirmed
+      axios
+        .get('https://www.vg.no/spesial/2020/corona-viruset/data/norway/')
+        .then(response => {
+          if (response && response.status === 200) {
+            setTimeout(() => {
+              this.loading = false
+              this.autoLoading = false
+              var newDate = new Date(Date.now())
+              this.latestUpdate = newDate.toLocaleTimeString()
+            }, 1000)
 
-              const confirmedBuilder = _.get(
-                response,
-                selectedAPI.path + selectedAPI.confirmed
-              )
-              const deathsBuilder = _.get(
-                response,
-                selectedAPI.path + selectedAPI.deaths
-              )
-
-              const deathData = {
-                name: selectedAPI.name,
-                data: [deathsBuilder],
-              }
-
-              const confirmedData = {
-                name: selectedAPI.name,
-                data: [confirmedBuilder],
-              }
-
-              let confirmedDataAlreadyAvailable = this.responseData.confirmedSeries.find(
-                object => object.name === selectedAPI.name
-              )
-              let deathDataAlreadyAvailable = this.responseData.deathSeries.find(
-                object => object.name === selectedAPI.name
-              )
-
-              // If data is already fetched, overwrite instead of pushing to data array
-              if (confirmedDataAlreadyAvailable || deathDataAlreadyAvailable) {
-                confirmedDataAlreadyAvailable = confirmedData
-                deathDataAlreadyAvailable = deathData
-              } else {
-                this.responseData.confirmedSeries.push(confirmedData)
-                this.responseData.deathSeries.push(deathData)
-              }
-            }
-          })
-          .catch(() => {
-            this.request()
-          })
-      }
+            this.responseData = response.data
+          }
+        })
+        .catch(() => {
+          this.request()
+        })
     },
   },
   mounted() {
