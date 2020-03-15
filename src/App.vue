@@ -69,4 +69,8 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+body {
+  overflow-x: hidden !important;
+}
 </style>
