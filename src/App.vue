@@ -1,9 +1,11 @@
 <template>
   <v-app>
     <v-tooltip top>
-      <v-btn v-if="updateExists" block max-height="4em" @click="refreshApp">
-        Update to latest version
-      </v-btn>
+      <v-snackbar :timeout="0" v-model="updateExists">
+        Oppdater til siste versjon
+        <v-btn color="success" text @click="refreshApp">Oppdater</v-btn>
+        <v-btn color="warning" text @click="updateExists = false">Lukk</v-btn>
+      </v-snackbar>
       <span>Tooltip</span>
     </v-tooltip>
     <Corona msg="Norwegian Coronavirus Statistics (COVID-19)" />
