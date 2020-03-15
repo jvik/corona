@@ -7,7 +7,7 @@
     <div class="my-2">
       <v-row justify="space-between" class="px-10">
         <v-col cols="auto" xs="12" md="8">
-          <v-select
+          <!-- <v-select
             :disable="loading"
             :items="apiList"
             label="Select data source"
@@ -17,7 +17,7 @@
             chips
             v-model="selectedAPIs"
             @change="init()"
-          ></v-select>
+          ></v-select> -->
         </v-col>
         <v-col cols="auto" sm="6" md="2" class="mt-0 pt-0">
           <v-switch
@@ -41,14 +41,31 @@
           </v-btn>
         </v-col>
       </v-row>
-      <v-row justify="center" class="px-10">
-        <v-col cols="auto" sm="12" md="8">
-          <VueApexCharts
-            type="bar"
-            :options="chartOptions"
-            :series="series"
-            max-width="95%"
-          ></VueApexCharts>
+      <v-row class="px-10">
+        <v-col>
+          <Confirmed :series="confirmedSeries" />
+        </v-col>
+        <v-col>
+          <v-card>
+            <VueApexCharts
+              type="bar"
+              :options="chartOptions2"
+              :series="deathSeries"
+            ></VueApexCharts>
+          </v-card>
+        </v-col>
+        <v-col>
+          <TimeSeries :timeseries="timeseries" />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <p>
+            Data provided by
+            <a href="http://vg.no" target="_blank" rel="noopener noreferrer"
+              >vg.no</a
+            >
+          </p>
         </v-col>
       </v-row>
       <v-row>
@@ -66,22 +83,36 @@
 import _ from 'lodash'
 import axios from 'axios'
 import VueApexCharts from 'vue-apexcharts'
+import TimeSeries from './charts/TimeSeries'
+import Confirmed from './charts/Confirmed'
 
 export default {
   name: 'Corona',
   components: {
     VueApexCharts,
+    TimeSeries,
+    Confirmed,
   },
   props: {
     msg: String,
   },
   computed: {
-    series: function() {
+    deathSeries: function() {
       function sortNumber(a, b) {
         return b.data[0] - a.data[0]
       }
 
-      const unsorted = this.responseData.series
+      const unsorted = this.responseData.deathSeries
+      const sorted = unsorted.sort(sortNumber)
+
+      return sorted
+    },
+    confirmedSeries: function() {
+      function sortNumber(a, b) {
+        return b.data[0] - a.data[0]
+      }
+
+      const unsorted = this.responseData.confirmedSeries
       const sorted = unsorted.sort(sortNumber)
 
       return sorted
@@ -105,26 +136,29 @@ export default {
           confirmed: 'confirmed',
           deaths: 'dead',
         },
-        {
-          name: 'isaaclin',
-          label: 'lab.isaaclin.cn',
-          url: 'https://lab.isaaclin.cn/nCoV/api/area?latest=1&province=挪威',
-          path: 'data.results[0]',
-          confirmed: 'confirmedCount',
-          deaths: 'deadCount',
-        },
+        // {
+        //   name: 'isaaclin',
+        //   label: 'lab.isaaclin.cn',
+        //   url: 'https://lab.isaaclin.cn/nCoV/api/area?latest=1&province=挪威',
+        //   path: 'data.results[0]',
+        //   confirmed: 'confirmedCount',
+        //   deaths: 'deadCount',
+        // },
       ],
       responseData: {
-        series: [],
+        confirmedSeries: [],
+        deathSeries: [],
       },
       selectedAPIs: [],
-      chartOptions: {
+      timeseries: {},
+
+      chartOptions2: {
         chart: {
           height: '200px',
-          id: 'vuechart-example',
+          id: 'confirmed',
         },
         xaxis: {
-          categories: ['Confirmed infected', 'Death count'],
+          categories: ['Death count'],
         },
       },
     }
@@ -149,10 +183,19 @@ export default {
     request() {
       // Remove stats that are not selected
       for (const selectedAPI of this.selectedAPIs) {
-        if (this.selectedAPIs.length !== this.responseData.series.length) {
-          this.responseData.series = this.responseData.series.filter(object => {
-            object.name === selectedAPI.name
-          })
+        if (
+          this.selectedAPIs.length !== this.responseData.confirmedSeries.length
+        ) {
+          this.responseData.confirmedSeries = this.responseData.confirmedSeries.filter(
+            object => {
+              object.name === selectedAPI.name
+            }
+          )
+          this.responseData.deathSeries = this.responseData.deathSeries.filter(
+            object => {
+              object.name === selectedAPI.name
+            }
+          )
         }
         axios
           .get(selectedAPI.url)
@@ -165,6 +208,8 @@ export default {
                 this.latestUpdate = newDate.toLocaleTimeString()
               }, 1000)
 
+              this.timeseries = response.data.timeseries.total.confirmed
+
               const confirmedBuilder = _.get(
                 response,
                 selectedAPI.path + selectedAPI.confirmed
@@ -174,20 +219,30 @@ export default {
                 selectedAPI.path + selectedAPI.deaths
               )
 
-              const data = {
+              const deathData = {
                 name: selectedAPI.name,
-                data: [confirmedBuilder, deathsBuilder],
+                data: [deathsBuilder],
               }
 
-              let dataAlreadyAvailable = this.responseData.series.find(
+              const confirmedData = {
+                name: selectedAPI.name,
+                data: [confirmedBuilder],
+              }
+
+              let confirmedDataAlreadyAvailable = this.responseData.confirmedSeries.find(
+                object => object.name === selectedAPI.name
+              )
+              let deathDataAlreadyAvailable = this.responseData.deathSeries.find(
                 object => object.name === selectedAPI.name
               )
 
               // If data is already fetched, overwrite instead of pushing to data array
-              if (dataAlreadyAvailable) {
-                dataAlreadyAvailable = data
+              if (confirmedDataAlreadyAvailable || deathDataAlreadyAvailable) {
+                confirmedDataAlreadyAvailable = confirmedData
+                deathDataAlreadyAvailable = deathData
               } else {
-                this.responseData.series.push(data)
+                this.responseData.confirmedSeries.push(confirmedData)
+                this.responseData.deathSeries.push(deathData)
               }
             }
           })
