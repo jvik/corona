@@ -47,7 +47,7 @@ export default {
           categories: this.timeSeriesDates,
           title: {
             offsetY: 10,
-            text: 'Infected over time',
+            text: 'New infections per day',
           },
         },
       }
